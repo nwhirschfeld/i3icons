@@ -7,7 +7,7 @@ native deamon to rename workspaces with fontawesome-icons based on open applicat
 ### Building from source
 
   ~~~ sh
-  $ git clone https://github.com/nwhirschfeld/i3icons.git 
+  $ git clone --recursive https://github.com/nwhirschfeld/i3icons.git 
   $ mkdir i3icons/build
   $ cd i3icons/build
   $ cmake ../src

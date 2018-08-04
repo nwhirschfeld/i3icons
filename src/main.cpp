@@ -64,12 +64,12 @@ int check_status(int status, unsigned long window) {
   return 0;
 }
 
-const char *get_string_property(char *property_name) {
+const char *get_string_property(std::string property_name) {
   Atom actual_type, filter_atom;
   int actual_format, status;
   unsigned long nitems, bytes_after;
 
-  filter_atom = XInternAtom(display, property_name, True);
+  filter_atom = XInternAtom(display, property_name.c_str(), True);
   XSynchronize(display, True);
   status = XGetWindowProperty(display, window, filter_atom, 0, MAXSTR, False,
                               AnyPropertyType, &actual_type, &actual_format,
@@ -79,7 +79,7 @@ const char *get_string_property(char *property_name) {
 }
 
 std::string get_window_class() {
-  std::string sName(get_string_property("WM_CLASS"));
+  std::string sName (get_string_property("WM_CLASS"));
   return sName;
 }
 

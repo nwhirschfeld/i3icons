@@ -4,14 +4,13 @@
 #include <i3ipc++/ipc.hpp>
 #include <iostream>
 
-using namespace std;
 
 #define MAXSTR 1000
 
 Display *display;
 unsigned long window;
 unsigned char *prop;
-map<string, string> iconmap;
+std::map<std::string, std::string> iconmap;
 i3ipc::connection conn;
 
 void fill_iconmap() {
@@ -53,12 +52,12 @@ void fill_iconmap() {
 
 int check_status(int status, unsigned long window) {
   if (status == BadWindow) {
-    throw string("window id does not exists!");
+    throw std::string("window id does not exists!");
     return 1;
   }
 
   if (status != Success) {
-    throw string("XGetWindowProperty failed!");
+    throw std::string("XGetWindowProperty failed!");
     return 2;
   }
 
@@ -79,8 +78,8 @@ const char *get_string_property(char *property_name) {
   return (char const *) prop;
 }
 
-string get_window_class() {
-  string sName(get_string_property("WM_CLASS"));
+std::string get_window_class() {
+  std::string sName(get_string_property("WM_CLASS"));
   return sName;
 }
 
@@ -94,7 +93,7 @@ void rename_ws() {
   }
 
   // get and parse the i3 tree
-  list<shared_ptr<i3ipc::container_t>> tree = conn.get_tree()->nodes;
+  std::list<std::shared_ptr<i3ipc::container_t>> tree = conn.get_tree()->nodes;
   for (auto &screen : tree) {
     if (screen->name != "__i3") {
       for (auto &element : screen->nodes) {
@@ -102,12 +101,12 @@ void rename_ws() {
           for (auto &ws : element->nodes) {
 
             // collect the shortnames (or icons) of the windows
-            list<string> shortnames;
+            std::list<std::string> shortnames;
 
             for (auto &w : ws->nodes) {
               // set the id of the current window to get the WM_CLASS
               window = w->xwindow_id;
-              string sn = get_window_class();
+              std::string sn = get_window_class();
               if (iconmap.find(sn) == iconmap.end()) {
                 // no icon found
                 shortnames.insert(shortnames.end(), sn);
@@ -117,7 +116,7 @@ void rename_ws() {
             }
 
             shortnames.unique();
-            string sn_string = "";
+            std::string sn_string = "";
             for (auto &s : shortnames) {
               sn_string.append(s + " ");
             }
@@ -125,7 +124,7 @@ void rename_ws() {
             if (!conn.send_command("rename workspace \"" + ws->name + "\" to " +
                                    ws->name.substr(0, ws->name.find(":", 0)) +
                                    ": " + sn_string)) {
-              throw string("Failed to exit via command");
+              throw std::string("Failed to exit via command");
             }
           }
         }

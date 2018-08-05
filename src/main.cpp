@@ -146,5 +146,4 @@ int main() {
   while (true) {
     conn.handle_event();
   }
-  return 0;
 }

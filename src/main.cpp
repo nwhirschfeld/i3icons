@@ -18,12 +18,6 @@ unsigned char *prop;
 std::map<std::string, std::string> iconmap;
 i3ipc::connection conn;
 
-bool fileexists(std::string file)
-{
-  std::ifstream f(file.c_str());
-  return !f.good();
-}
-
 void fill_iconmap() {
   // read icon table from config file
   std::ifstream infile("/usr/local/etc/i3icons/icons.config");

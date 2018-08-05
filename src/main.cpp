@@ -50,15 +50,13 @@ void fill_iconmap() {
   iconmap["zim"] = " ";
 }
 
-int check_status(int status, unsigned long window) {
+int check_status(int status) {
   if (status == BadWindow) {
     throw std::string("window id does not exists!");
-    return 1;
   }
 
   if (status != Success) {
     throw std::string("XGetWindowProperty failed!");
-    return 2;
   }
 
   return 0;
@@ -74,7 +72,7 @@ const char *get_string_property(std::string property_name) {
   status = XGetWindowProperty(display, window, filter_atom, 0, MAXSTR, False,
                               AnyPropertyType, &actual_type, &actual_format,
                               &nitems, &bytes_after, &prop);
-  if (check_status(status, window)) return "";
+  if (check_status(status)) return "";
   return (char const *) prop;
 }
 
@@ -85,9 +83,9 @@ std::string get_window_class() {
 
 void rename_ws() {
   // prepare display for reading shortnames
-  char *display_name = NULL; // could be the value of $DISPLAY
+  char *display_name = nullptr; // could be the value of $DISPLAY
   display = XOpenDisplay(display_name);
-  if (display == NULL) {
+  if (display == nullptr) {
     fprintf(stderr, "%s:  unable to open display '%s'\n", "XXX",
             XDisplayName(display_name));
   }

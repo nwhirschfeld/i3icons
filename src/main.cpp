@@ -3,6 +3,11 @@
 #include <algorithm> // std::find_if
 #include <i3ipc++/ipc.hpp>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+
+
 
 
 #define MAXSTR 1000
@@ -13,41 +18,23 @@ unsigned char *prop;
 std::map<std::string, std::string> iconmap;
 i3ipc::connection conn;
 
-void fill_iconmap() {
-  /****************
-   * define icons *
-   ****************/
+bool fileexists(std::string file)
+{
+  std::ifstream f(file.c_str());
+  return !f.good();
+}
 
-  iconmap["abiword"] = " ";
-  iconmap["libreoffice"] = " ";
-  iconmap["arandr"] = " ";
-  iconmap["cura"] = " ";
-  iconmap["Evince"] = " ";
-  iconmap["evolution"] = " ";
-  iconmap["firefox"] = " ";
-  iconmap["gimp"] = " ";
-  iconmap["Hopper"] = " ";
-  iconmap["inkscape"] = " ";
-  iconmap["keepassx2"] = " ";
-  iconmap["krita"] = " ";
-  iconmap["Minecraft 1.11.2"] = " ";
-  iconmap["nautilus"] = " ";
-  iconmap["Navigator"] = "";
-  iconmap["net-minecraft-bootstrap-Bootstrap"] = " ";
-  iconmap["openscad"] = " ";
-  iconmap["pavucontrol"] = " ";
-  iconmap["sun-awt-X11-XFramePeer"] = " ";
-  iconmap["qtcreator"] = " ";
-  iconmap["quasselclient"] = " ";
-  iconmap["Slic3r"] = " ";
-  iconmap["sublime_text"] = " ";
-  iconmap["VirtualBox"] = " ";
-  iconmap["vlc"] = " ";
-  iconmap["pantheon-music"] = " ";
-  iconmap["lxappearance"] = " ";
-  iconmap["Wireshark-gtk"] = " ";
-  iconmap["xfce4-terminal"] = " ";
-  iconmap["zim"] = " ";
+void fill_iconmap() {
+  // read icon table from config file
+  std::ifstream infile("/usr/local/etc/i3icons/icons.config");
+  std::string line;
+  while (std::getline(infile, line))
+  {
+
+  std::cout << line << std::endl;
+      auto end = line.find('=');
+      iconmap[line.substr(0, end)] = line.substr(end+1, line.size());
+  }
 }
 
 int check_status(int status) {
